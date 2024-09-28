@@ -1,0 +1,37 @@
+services:
+
+  db:
+    container_name: postgres2
+    image: postgres:16
+    environment:
+      POSTGRES_USER: sam
+      POSTGRES_PASSWORD: test
+      PGDATA: /data/postgres
+      POSTGRES_DB: customer  # Add this line
+    volumes:
+      - db:/data/postgres
+    ports:
+      - "5433:5432"
+    networks:
+      - db
+    restart: unless-stopped
+
+  demo-api:
+    container_name: demo
+    image: morgan868/ws511-api
+    ports:
+      - "8088:8080"
+    networks:
+      - db
+    depends_on:
+      - db
+    restart: unless-stopped
+    command:
+      - --spring.datasource.url=jdbc:postgresql://db:5432/customer
+
+networks:
+  db:
+    driver: bridge
+
+volumes:
+  db:

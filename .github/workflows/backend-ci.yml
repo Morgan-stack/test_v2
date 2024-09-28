@@ -36,7 +36,7 @@ jobs:
     steps:
       # check out code to the runner
       - uses: actions/checkout@v4
-      - uses: actions/setup-java@v3
+      - uses: actions/setup-java@v4
         with:
           distribtuin: 'temurin'
           java-version: '17'

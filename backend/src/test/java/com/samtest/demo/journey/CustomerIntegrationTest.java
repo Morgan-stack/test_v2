@@ -20,7 +20,7 @@ import java.util.UUID;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class CustomerIT {
+public class CustomerIntegrationTest {
 
 
     // This is my postman.

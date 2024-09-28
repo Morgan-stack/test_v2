@@ -19,4 +19,4 @@ spring:
   main:
     web-application-type: servlet
   flyway:
-    enabled: false
+    enabled: true

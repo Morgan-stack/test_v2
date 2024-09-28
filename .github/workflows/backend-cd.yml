@@ -1,52 +1,43 @@
-name: CI - Build Backend
+name: CD - Deploy Backend
 
 on:
-  pull_request:
+  workflow_dispatch:
+  push:
     branches:
       - main
     paths:
       - backend/**
 
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
-    # Service containers to run with `container-job`
     services:
-      # Label used to access the service container
       postgres:
-        # Docker Hub image
         image: postgres:16
-        # Provide the password for postgres
         env:
           POSTGRES_USER: sam
           POSTGRES_PASSWORD: test
           POSTGRES_DB: customer
         ports:
-          - "5433:5432"
-        # Set health checks to wait until postgres has started
-        options: >-
-          --health-cmd pg_isready
+          5332:5432
+        options:
+          --health-cmd pg_ready
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
     defaults:
       run:
-        working-directory: ./backend
+        working-directory:  ./backend
 
     steps:
-      # check out code to the runner
       - uses: actions/checkout@v4
       - uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
           java-version: '17'
           cache: 'maven'
-
       - name: Login to Docker Hub
         uses: docker/login-action@v2
         with:
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
-
-      - name: Build and run Unit/Integration Tests with Maven
-        run: mvn -ntp -B verify
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
